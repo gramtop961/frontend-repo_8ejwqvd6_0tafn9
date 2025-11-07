@@ -1,28 +1,43 @@
-import { useState } from 'react'
+import { useState } from "react";
+import Header from "./components/Header.jsx";
+import UploadForm from "./components/UploadForm.jsx";
+import Gallery from "./components/Gallery.jsx";
+import ShareModal from "./components/ShareModal.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [items, setItems] = useState([]);
+  const [active, setActive] = useState(null);
+
+  const addItems = (newItems) => {
+    setItems((prev) => [...new Set([...newItems, ...prev])]);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-white to-indigo-50">
+      <Header />
+
+      <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        <section className="bg-white rounded-2xl shadow-sm border border-black/5 p-5">
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">Upload Photos</h2>
+          <UploadForm onAdd={addItems} />
+        </section>
+
+        <section className="bg-white rounded-2xl shadow-sm border border-black/5 p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-gray-900">Your Gallery</h2>
+            <p className="text-sm text-gray-500">{items.length} photo{items.length === 1 ? "" : "s"}</p>
+          </div>
+          <Gallery items={items} onOpen={setActive} />
+        </section>
+      </main>
+
+      <ShareModal open={!!active} item={active} onClose={() => setActive(null)} />
+
+      <footer className="py-10 text-center text-sm text-gray-500">
+        Built with love • Share beautiful moments instantly
+      </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
